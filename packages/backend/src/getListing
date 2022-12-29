@@ -1,0 +1,11 @@
+import { PrismaClient } from "@prisma/client";
+type Listing = {
+    price: number
+    brand: string | null
+    model: string
+    engineL: number | null
+}
+export async function addListing(data:Listing){
+    await new PrismaClient().listing.create({data})
+    console.log("Hello world lel Xd")
+}
