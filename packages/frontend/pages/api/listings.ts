@@ -1,10 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { PrismaClient } from '@prisma/client'
+import { Listing, PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
-  name: string
+  listings: Listing[]
+
 }
+
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,7 +17,7 @@ export default async function handler(
     return res.status(404).end()
   }
   //console.log(listings)
-  res.status(200).json({listings: listings as any })
+  res.status(200).json({listings})
 }
 export async function getListings({ price, search }: { price?: number, search?: string }) {
   try {
