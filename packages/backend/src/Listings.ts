@@ -1,13 +1,24 @@
-import { PrismaClient } from "@prisma/client";
-type Listing = {
-    price: number
-    brand: string | null
-    model: string
-    engineL: number | null
+import { BodyType, DriveType, FuelType, PrismaClient, Transmission } from "@prisma/client";
+export type Listing = {
+    link: string;
+    brand: string;
+    model: string;
+    bodyType?: BodyType;
+    year: number;
+    engineL?: number;
+    engineKW?: number;
+    mileage?: number;
+    fuelType?: FuelType;
+    driveType?: DriveType;
+    transmission?: Transmission;
+    color?: string;
+    imageLink: string;
+
 }
-export async function addListing(data: Listing) {
-    await new PrismaClient().listing.create({ data })
-    console.log("Hello world lel Xd")
+
+export async function addListings(data: Listing[],siteName:string) {
+    await new PrismaClient().listing.createMany({ data:data.map(listing=>({...listing,siteName})) })
+    console.log("Added new listings")
 }
 //
 export async function getListings({ price, search }: { price?: number, search?: string }) {

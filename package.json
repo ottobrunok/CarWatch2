@@ -7,6 +7,7 @@
     "backend": "cd packages/backend && npm run start",
     "frontend": "cd packages/frontend && npm run dev",
     "updatedb": "npx prisma migrate dev",
+    "deletedb": "npx prisma migrate reset", 
     "gentype": "npx prisma generate"
   },
   "devDependencies": {
@@ -17,6 +18,9 @@
   },
   "dependencies": {
     "@prisma/client": "^4.8.0",
-    "@types/react": "^18.0.26"
+    "@types/react": "^18.0.26",
+    "puppeteer": "^19.4.1",
+    "puppeteer-extra": "^3.3.4",
+    "puppeteer-extra-plugin-stealth": "^2.11.1"
   }
 }

@@ -1,6 +1,5 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,10 +9,63 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum DriveType {
+  FrontWheel
+  FourWheel
+  RearWheel
+}
+
+enum FuelType {
+  Diesel
+  Petrol
+  CNGLNG
+  Hybrid
+  Electric
+}
+
+enum Transmission {
+  Manual
+  Automatic
+  SemiAutomatic
+}
+
+enum BodyType {
+  Sedan
+  Hatchback
+  Touring
+  Minivan
+  Coupe
+  Cabriolet
+  Pickup
+  Limousine
+  Van
+}
+
 model Listing {
-  id      String  @id @default(cuid())
-  price   Float   @default(0)
-  brand   String?
-  model   String?
-  engineL Float?
+  id           String       @id @default(cuid())
+  price        Float        @default(0)
+  link         String?
+  imageLink    String?
+  year         Int?
+  brand        String?
+  model        String?
+  engineL      Float?
+  engineKW     Int?
+  mileage      Int?
+  driveType    DriveType?
+  fuelType     FuelType?
+  transmission Transmission?
+  bodyType     BodyType?
+  color        String? 
+  //tough guy don't touch B)
+  siteName     String
+  site         Site         @relation(fields: [siteName], references: [name])
+}
+
+model Site {
+  name     String    @id
+  url      String
+  baseurl  String
+  lastLink String    @default("")
+  listings Listing[]
 }
