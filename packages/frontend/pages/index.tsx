@@ -3,9 +3,11 @@ import axios from 'axios'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import AuctionListings from '../components/Listings'
+import { Site } from '@prisma/client'
 
 export default function Home() {
-  const [listings, setListings] = useState<Listing[]>([])
+  const [listings, setListings] = useState<(Listing & {site: Site })[] >([])
   const [search, setSearch] = useState<string>("")
   const [price, setPrice] = useState<number>(0)
   
@@ -13,7 +15,7 @@ export default function Home() {
     axios.get("/api/listings", {params:{price, search}}).then(l => setListings(l.data.listings))
   }, [search,price])
   
-  console.log(listings)
+  //console.log(listings)
   return (
     <>
       <Head>
@@ -29,21 +31,7 @@ export default function Home() {
       price
       <input type="number" value={price} onChange = {e => setPrice(Number (e.currentTarget.value))}/>
       <div className='space-y-5'>
-        
-        {listings.map(l => <div className='justify-center w-full flex space-x-2 bg-blue-400 text-2xl font-bold rounded-xl shadow-xl'>
-          <p>
-            Brand: {l.brand}
-          </p>
-          <p>
-            Model: {l.model}
-          </p>
-          <p>
-            Price: {l.price}
-          </p>
-          <p>
-            Engine power: {l.engineL}L
-          </p>
-        </div>)}
+        <AuctionListings listings={listings}></AuctionListings>
       </div>
       </main>
     </>

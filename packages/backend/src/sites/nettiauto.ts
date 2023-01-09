@@ -14,6 +14,7 @@ const scrapER = (link: string) => {
     const brand: string = document.querySelector('div.bigger_lsize > div#pagelink > a:nth-of-type(2) > span')?.textContent;
     const modelArray = document.querySelector('div.bigger_lsize > div#pagelink > a:nth-of-type(3) > span')?.textContent?.split(" ")?.slice(1);
     const model: string = modelArray?.join(" ")
+    const price: number = parseInt(document.querySelector("#rightLogoWrap > span > span > span")?.textContent?.replace(/[^0-9.]/g, ''))
     const bodyType: string = document.querySelector("#srch_id_car_type option[selected]")?.textContent
     const imageLink: string = document.querySelector('li.flex-active-slide div#img_0')?.getAttribute('data-ipath');
     var engineKWtxt = document.querySelector("div.acc_det > div > b")?.textContent
@@ -53,7 +54,7 @@ const scrapER = (link: string) => {
     const fuelType: string = fuelTypeElement?.nextElementSibling?.textContent?.split(" ")[2]
 
     // ? engineKW, mileage, engineL, fuelType, drive, transmission,
-    return { link, brand, model, bodyType, year, engineL, engineKW, mileage, fuelType, driveType, transmission, color, imageLink }
+    return { price, link, brand, model, bodyType, year, engineL, engineKW, mileage, fuelType, driveType, transmission, color, imageLink }
 }
 
 async function scrape(lastLink: string, browser: Browser): Promise<ScrapeReturn> {
@@ -96,16 +97,37 @@ async function scrape(lastLink: string, browser: Browser): Promise<ScrapeReturn>
         //data sees funktsioon pasa jaoks
         const data = await page.evaluate(scrapER, link);
 
-        const bodyData = data.bodyType.toLocaleLowerCase()
         //ifelse ":"
+        const bodyData = data.bodyType.toLocaleLowerCase()
         const bodyType: BodyType = bodyData.includes("sedan") ? "Sedan" :
-            bodyData.includes("sedan") ? "Sedan" :
-                bodyData.includes("sedan") ? "Sedan" :
-                    bodyData.includes("Sedan") ? "Sedan" : undefined
+                                    bodyData.includes("mpv") ? "MPV" :
+                                    bodyData.includes("terrain") ? "AllTerrain" :
+                                    bodyData.includes("hatchback" ) ? "Hatchback" :
+                                    bodyData.includes("station" ) ? "Hatchback" :
+                                    bodyData.includes("wagon" ) ? "Hatchback" :
+                                    bodyData.includes("touring") ?  "Touring" :
+                                    bodyData.includes("minivan") ? "Minivan" :
+                                    bodyData.includes("coup") ? "Coupe" :
+                                    bodyData.includes("cabriolet") ? "Cabriolet" :
+                                    bodyData.includes("limousine") ? "Limousine" :
+                                    bodyData.includes("van") ? "Van" : undefined
 
-        const fuelType: FuelType = data.fuelType.toLowerCase().includes("diesel") ? "Diesel" : undefined
-        const transmission: Transmission = "Automatic"//) ? "Automatic" : data.bodyType.includes("Sedan") ? "Sedan" : data.bodyType.includes("Sedan") ? "Sedan" : data.bodyType.includes("Sedan") ? "Sedan" : undefined
-        const driveType: DriveType = "FourWheel"//Sedan") ? "Sedan" : data.bodyType.includes("Sedan") ? "Sedan" : data.bodyType.includes("Sedan") ? "Sedan" : data.bodyType.includes("Sedan") ? "Sedan" : undefined
+        const fuelData = data.fuelType.toLocaleLowerCase()
+        const fuelType : FuelType =  fuelData.includes("diesel") ? "Diesel" :
+                                    fuelData.includes("petrol") ? "Petrol" :
+                                    fuelData.includes("gas") ? "CNGLNG" :
+                                    fuelData.includes("hybrid") ? "Hybrid" :
+                                    fuelData.includes("electric") ? "Electric" : undefined
+        
+        const transmissionData = data.transmission.toLocaleLowerCase()
+        const transmission: Transmission = transmissionData.includes("manual") ? "Manual" :
+                                    transmissionData.includes("automatic") ? "Automatic" :
+                                    transmissionData.includes("semi") ? "SemiAutomatic" : undefined
+        const driveData = data.driveType.toLocaleLowerCase()
+        const driveType: DriveType = driveData.includes("front") ? "FrontWheel" :
+                                    driveData.includes("rear") ? "RearWheel" :
+                                    driveData.includes("four") ? "FourWheel" : undefined
+        
         listings.push({ ...data, bodyType, fuelType, transmission, driveType })
         console.log(data)
         console.log(counter + ":")

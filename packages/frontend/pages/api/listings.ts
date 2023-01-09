@@ -21,7 +21,7 @@ export default async function handler(
 }
 export async function getListings({ price, search }: { price?: number, search?: string }) {
   try {
-    const listings = await new PrismaClient().listing.findMany({ where: { price: { lt: price }, OR: [{ brand: { contains: search } }, { model: { contains: search } }] } })
+    const listings = await new PrismaClient().listing.findMany({ where: { price: { lt: price },OR: [{ brand: { contains: search } }, { model: { contains: search } }] }, include:{site: true} })
     return listings
   }
   catch (e) {

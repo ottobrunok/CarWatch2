@@ -25,7 +25,7 @@ async function Main() {
     puppeteer.use(StealthPlugin())
     //opening browser
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         executablePath: "C:/Program Files/Google/Chrome/Application/Chrome.exe",
         //scrape non-https websites easier
         ignoreHTTPSErrors: true,

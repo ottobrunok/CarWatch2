@@ -39,6 +39,8 @@ enum BodyType {
   Pickup
   Limousine
   Van
+  MPV
+  AllTerrain
 }
 
 model Listing {
