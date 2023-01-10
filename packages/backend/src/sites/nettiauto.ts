@@ -132,21 +132,23 @@ async function scrape(lastLink: string, browser: Browser): Promise<ScrapeReturn>
                                                 bodyData.includes("limousine") ? "Limousine" :
                                                     bodyData.includes("van") ? "Van" : undefined
 
-        const fuelData = data.fuelType.toLocaleLowerCase()
-        const fuelType: FuelType = fuelData.includes("diesel") ? "Diesel" :
-            fuelData.includes("petrol") ? "Petrol" :
-                fuelData.includes("gas") ? "CNGLNG" :
-                    fuelData.includes("hybrid") ? "Hybrid" :
-                        fuelData.includes("electric") ? "Electric" : undefined
-
-        const transmissionData = data.transmission.toLocaleLowerCase()
+        const fuelData = data?.fuelType?.toLocaleLowerCase()
+        const fuelType: FuelType = fuelData?.includes("diesel") ? "Diesel" :
+            fuelData?.includes("petrol") ? "Petrol" :
+                fuelData?.includes("gas") ? "CNGLNG" :
+                    fuelData?.includes("hybrid") ? "Hybrid" :
+                        fuelData?.includes("electric") ? "Electric" : undefined
+        
+        const transmissionData = data?.transmission?.toLocaleLowerCase()
         const transmission: Transmission = transmissionData.includes("manual") ? "Manual" :
             transmissionData.includes("automatic") ? "Automatic" :
                 transmissionData.includes("semi") ? "SemiAutomatic" : undefined
-        const driveData = data.driveType.toLocaleLowerCase()
+
+        const driveData = data?.driveType?.toLocaleLowerCase()
         const driveType: DriveType = driveData.includes("front") ? "FrontWheel" :
             driveData.includes("rear") ? "RearWheel" :
                 driveData.includes("four") ? "FourWheel" : undefined
+                
 
         listings.push({ ...data, bodyType, fuelType, transmission, driveType, color,link })
         console.log(data)

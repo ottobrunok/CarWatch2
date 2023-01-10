@@ -8,7 +8,8 @@
     "frontend": "cd packages/frontend && npm run dev",
     "updatedb": "npx prisma migrate dev",
     "deletedb": "npx prisma migrate reset", 
-    "gentype": "npx prisma generate"
+    "gentype": "npx prisma generate",
+    "updatedbneon": "npx prisma migrate deploy"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

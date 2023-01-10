@@ -7,14 +7,35 @@ import AuctionListings from '../components/Listings'
 import { Site } from '@prisma/client'
 
 export default function Home() {
-  const [listings, setListings] = useState<(Listing & {site: Site })[] >([])
-  const [search, setSearch] = useState<string>("")
-  const [price, setPrice] = useState<number>(0)
+  /*
+  const [price, setPrice] = useState("");
+  const [search, setSearch] = useState("");
+  const [listings, setListings] = useState([]);
   
   useEffect(() => {
+    const params = {};
+    if (search) {
+      params.search = search
+    }
+    if (price) {
+      params.price = price;
+    }
+    if(params={})
+    axios.get("/api/listings", {params}).then(res => setListings(res.data.listings));
+  }, [search, price]);
+*/
+
+
+
+  const [listings, setListings] = useState<(Listing & {site: Site })[] >([])
+  const [search, setSearch] = useState<string>("")
+  const [price, setPrice] = useState<number>()
+  
+  useEffect(() => {
+
     axios.get("/api/listings", {params:{price, search}}).then(l => setListings(l.data.listings))
   }, [search,price])
-  
+
   //console.log(listings)
   return (
     <>
@@ -29,7 +50,7 @@ export default function Home() {
       brand/model
       <input type="text" value={search} onChange = {e => setSearch(e.currentTarget.value)}/>
       price
-      <input type="number" value={price} onChange = {e => setPrice(Number (e.currentTarget.value))}/>
+      <input type="number" value={price=== undefined ? '' : price} onChange = {e => setPrice(e.currentTarget.value? Number (e.currentTarget.value) : undefined)}/>
       <div className='space-y-5'>
         <AuctionListings listings={listings}></AuctionListings>
       </div>

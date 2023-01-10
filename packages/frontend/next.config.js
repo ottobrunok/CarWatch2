@@ -2,7 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['cdn.nettiauto.com'],
+    domains: ['cdn.nettiauto.com','img12.img-bcg.eu'],
+  
   },
 }
 
