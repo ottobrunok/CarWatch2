@@ -46,7 +46,7 @@ enum BodyType {
 
 model Listing {
   id           String       @id @default(cuid())
-  price        Float        @default(0)
+  price        Float?
   link         String?
   imageLink    String?
   year         Int?

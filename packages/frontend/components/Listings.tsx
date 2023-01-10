@@ -33,7 +33,8 @@ const AuctionListings: NextPage<{ listings: (Listing & { site: Site })[] }> = ({
             <div className="px-6 py-4">
               <div className="flex-col justify-between items-center mb-6 ">
                 <h2 className="text-2xl font-bold text-gray-900 ">{listing.brand} {listing.model}</h2>
-                <p className="text-gray-900 font-semibold text-2xl">{listing.price}€</p>
+                {listing.price!= null && <p className="text-gray-900 font-semibold text-2xl">{listing.price}€</p>}
+                {listing.price == null && <p className="text-gray-900 font-semibold text-2xl">Not priced</p>}
                 <p className="text-stone-600 font-semibold text-xl">{listing.siteName}</p>
               </div>
               <div className=" grid gap-1 grid-cols-1 md:grid-cols-1 lg:grid-cols-1 whitespace-nowrap ">
