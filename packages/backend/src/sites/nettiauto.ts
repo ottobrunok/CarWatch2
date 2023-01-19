@@ -118,19 +118,20 @@ async function scrape(lastLink: string, browser: Browser): Promise<ScrapeReturn>
             console.log(color)
         }
         //ifelse ":"
-        const bodyData = data.bodyType.toLocaleLowerCase()
-        const bodyType: BodyType = bodyData.includes("sedan") ? "Sedan" :
-            bodyData.includes("mpv") ? "MPV" :
-                bodyData.includes("terrain") ? "AllTerrain" :
-                    bodyData.includes("hatchback") ? "Hatchback" :
-                        bodyData.includes("station") ? "StationWagon" :
-                            bodyData.includes("wagon") ? "StationWagon" :
-                                bodyData.includes("touring") ? "Touring" :
-                                    bodyData.includes("minivan") ? "Minivan" :
-                                        bodyData.includes("coup") ? "Coupe" :
-                                            bodyData.includes("cabriolet") ? "Cabriolet" :
-                                                bodyData.includes("limousine") ? "Limousine" :
-                                                    bodyData.includes("van") ? "Van" : undefined
+        const bodyData = data?.bodyType?.toLocaleLowerCase()
+        const bodyType: BodyType = bodyData?.includes("sedan") ? "Sedan" :
+            bodyData?.includes("mpv") ? "MPV" :
+                bodyData?.includes("terrain") ? "AllTerrain" :
+                    bodyData?.includes("hatchback") ? "Hatchback" :
+                        bodyData?.includes("station") ? "StationWagon" :
+                            bodyData?.includes("wagon") ? "StationWagon" :
+                                bodyData?.includes("touring") ? "Touring" :
+                                    bodyData?.includes("minivan") ? "Minivan" :
+                                        bodyData?.includes("coup") ? "Coupe" :
+                                            bodyData?.includes("cabriolet") ? "Cabriolet" :
+                                                bodyData?.includes("limousine") ? "Limousine" :
+                                                    bodyData?.includes("van") ? "Van":
+                                                        bodyData?.includes("pickup") ? "Pickup" : undefined
 
         const fuelData = data?.fuelType?.toLocaleLowerCase()
         const fuelType: FuelType = fuelData?.includes("diesel") ? "Diesel" :
@@ -140,14 +141,14 @@ async function scrape(lastLink: string, browser: Browser): Promise<ScrapeReturn>
                         fuelData?.includes("electric") ? "Electric" : undefined
         
         const transmissionData = data?.transmission?.toLocaleLowerCase()
-        const transmission: Transmission = transmissionData.includes("manual") ? "Manual" :
-            transmissionData.includes("automatic") ? "Automatic" :
-                transmissionData.includes("semi") ? "SemiAutomatic" : undefined
+        const transmission: Transmission = transmissionData?.includes("manual") ? "Manual" :
+            transmissionData?.includes("automatic") ? "Automatic" :
+                transmissionData?.includes("semi") ? "SemiAutomatic" : undefined
 
         const driveData = data?.driveType?.toLocaleLowerCase()
-        const driveType: DriveType = driveData.includes("front") ? "FrontWheel" :
-            driveData.includes("rear") ? "RearWheel" :
-                driveData.includes("four") ? "FourWheel" : undefined
+        const driveType: DriveType = driveData?.includes("front") ? "FrontWheel" :
+            driveData?.includes("rear") ? "RearWheel" :
+                driveData?.includes("four") ? "FourWheel" : undefined
                 
 
         listings.push({ ...data, bodyType, fuelType, transmission, driveType, color,link })

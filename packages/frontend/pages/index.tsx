@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import AuctionListings from '../components/Listings'
 import { Site } from '@prisma/client'
+import Search from "../components/Search"
 
 export default function Home() {
   /*
@@ -27,14 +28,14 @@ export default function Home() {
 
 
 
-  const [listings, setListings] = useState<(Listing & {site: Site })[] >([])
+  const [listings, setListings] = useState<(Listing & { site: Site })[]>([])
   const [search, setSearch] = useState<string>("")
   const [price, setPrice] = useState<number>()
-  
+
   useEffect(() => {
 
-    axios.get("/api/listings", {params:{price, search}}).then(l => setListings(l.data.listings))
-  }, [search,price])
+    axios.get("/api/listings", { params: { price, search } }).then(l => setListings(l.data.listings))
+  }, [search, price])
 
   //console.log(listings)
   return (
@@ -46,14 +47,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-      MINU SUURN VEEBILEHT
-      brand/model
-      <input type="text" value={search} onChange = {e => setSearch(e.currentTarget.value)}/>
-      price
-      <input type="number" value={price=== undefined ? '' : price} onChange = {e => setPrice(e.currentTarget.value? Number (e.currentTarget.value) : undefined)}/>
-      <div className='space-y-5'>
-        <AuctionListings listings={listings}></AuctionListings>
-      </div>
+        MINU SUURN VEEBILEHT
+        brand/model
+
+        <input type="text" value={search} onChange={e => setSearch(e.currentTarget.value)} />
+        price
+        <input type="number" value={price === undefined ? '' : price} onChange={e => setPrice(e.currentTarget.value ? Number(e.currentTarget.value) : undefined)} />
+        price
+        <div className='space-y-5'>
+          <AuctionListings listings={listings}></AuctionListings>
+        </div>
       </main>
     </>
   )

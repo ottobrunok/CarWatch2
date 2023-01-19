@@ -6,22 +6,8 @@ import { Site } from '@prisma/client';
 import { useEffect, useState } from 'react';
 // Assume that you have an array of auction listings called `listings`
 
-const AuctionListings: NextPage<{ listings: (Listing & { site: Site })[] }> = ({ listings }) => {
+const SearchBox: NextPage<{ listings: (Listing & { site: Site })[] }> = ({ listings }) => {
 
-  const [fontSize, setFontSize] = useState(16);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setFontSize(window.innerWidth / 50);
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   return (
     <div className="container mx-auto px-4">
@@ -55,4 +41,4 @@ const AuctionListings: NextPage<{ listings: (Listing & { site: Site })[] }> = ({
   );
 };
 
-export default AuctionListings;
+export default SearchBox;

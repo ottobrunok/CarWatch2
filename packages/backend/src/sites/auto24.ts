@@ -30,18 +30,20 @@ const scrapER = (link: string) => {
     const model : string = document.querySelectorAll(`.b-breadcrumbs__item`)?.[2]?.textContent
     const bodyType : string = document.querySelectorAll(`.value`)?.[1]?.textContent
     const year : number = parseInt(document.querySelectorAll(`.value`)?.[2]?.textContent?.split('/')?.[1])
-    const engineL : number = parseFloat(document.querySelectorAll(`.value`)?.[3]?.textContent?.split(' ')?.[0]+"L")
-    const fuelType : string = document.querySelectorAll(`.value`)?.[4]?.textContent
+    const price : number = parseInt(document.querySelector("body > div.tpl-body > div.tpl-content > div > div.topSection > div.topSection__mainData > table > tbody > tr.field-hind > td.field > span.value")?.textContent?.replace(/[^0-9]/g, ''))
+    const engineL : number =parseFloat(document.querySelector(`body > div.tpl-body > div.tpl-content > div > div.topSection > div.topSection__mainData > table > tbody > tr.field-mootorvoimsus > td.field > span`)?.textContent?.split(' ')?.[0])
+    const fuelType : string = document.querySelector(`body > div.tpl-body > div.tpl-content > div > div.topSection > div.topSection__mainData > table > tbody > tr.field-kytus > td.field > span`)?.textContent
 
     //because engineKW is the last string, we have to get the length of it and select the last string from the query
     const values = document.querySelectorAll('.value')?.[3]?.textContent?.split(" ")
     const len = values.length
-    const engineKW : number = parseInt(document.querySelectorAll('.value')?.[3]?.textContent?.split(" ")[len-1])
+    const engineKW : number = parseInt(document.querySelector('body > div.tpl-body > div.tpl-content > div > div.topSection > div.topSection__mainData > table > tbody > tr.field-mootorvoimsus > td.field > span')?.textContent?.split(" ")?.pop())
 
-    const mileage : number = parseInt(document.querySelectorAll(`.value`)?.[5]?.textContent)
-    const driveType : string = document.querySelectorAll(`.value`)?.[6]?.textContent
-    const transmission : string = document.querySelectorAll(`.value`)?.[7]?.textContent
-    const color : string = document.querySelectorAll(`.value`)?.[8]?.textContent
+    const mileage : number = parseInt(document.querySelector(`body > div.tpl-body > div.tpl-content > div > div.topSection > div.topSection__mainData > table > tbody > tr.field-labisoit > td.field > span`)?.textContent?.replace(" ", "")?.replace("km", ""))
+    const driveType : string = document.querySelector(`body > div.tpl-body > div.tpl-content > div > div.topSection > div.topSection__mainData > table > tbody > tr.field-vedavsild > td.field > span`)?.textContent
+    const transmission : string = document.querySelector(`body > div.tpl-body > div.tpl-content > div > div.topSection > div.topSection__mainData > table > tbody > tr.field-kaigukast_kaikudega > td.field > span`)?.textContent
+    const color : string = document.querySelector("body > div.tpl-body > div.tpl-content > div > div.topSection > div.topSection__mainData > table > tbody > tr.field-varvus > td.field > span")?.textContent
+    //const color : string = document.querySelectorAll(`.value`)?.[8]?.textContent?.[0]
     let imageLink : string = ""
     try {
         const element = document.querySelector('.vImages__item')
@@ -52,7 +54,7 @@ const scrapER = (link: string) => {
 
     //const link : string = "https://eng.auto24.ee"+link
     
-    return {brand, model, bodyType, year, engineL, engineKW, fuelType, mileage, driveType, transmission, color, imageLink}
+    return {price,brand, model, bodyType, year, engineL, engineKW, fuelType, mileage, driveType, transmission, color, imageLink}
 
 
 }
@@ -103,11 +105,39 @@ async function scrape(lastLink: string, browser: Browser): Promise<ScrapeReturn>
             color = colorChoice(data.color.toLowerCase())
             console.log(color)
         }
-        let transmission : Transmission = "Automatic"
-        let fuelType : FuelType = "Diesel"
-        let bodyType : BodyType = "Sedan"
-        let driveType : DriveType = "FourWheel"
+        console.log("bodytype: "+data.bodyType,"transmission: "+ data.transmission,"drivetype: "+ data.driveType,"fueltype: "+data.fuelType)
+        const bodyData = data.bodyType?.toLocaleLowerCase()
+        const bodyType: BodyType = bodyData?.includes("sedan") ? "Sedan" :
+            bodyData?.includes("mpv") ? "MPV" :
+                bodyData?.includes("terrain") ? "AllTerrain" :
+                    bodyData?.includes("hatchback") ? "Hatchback" :
+                        bodyData?.includes("station") ? "StationWagon" :
+                            bodyData?.includes("wagon") ? "StationWagon" :
+                                bodyData?.includes("touring") ? "Touring" :
+                                    bodyData?.includes("minivan") ? "Minivan" :
+                                        bodyData?.includes("coup") ? "Coupe" :
+                                            bodyData?.includes("cabriolet") ? "Cabriolet" :
+                                                bodyData?.includes("limousine") ? "Limousine" :
+                                                    bodyData?.includes("pickup") ? "Pickup" : 
+                                                        bodyData?.includes("van") ? "Van" : undefined
 
+        const fuelData = data?.fuelType?.toLocaleLowerCase()
+        const fuelType: FuelType = fuelData?.includes("diesel") ? "Diesel" :
+            fuelData?.includes("petrol") ? "Petrol" :
+                fuelData?.includes("gas") ? "CNGLNG" :
+                    fuelData?.includes("hybrid") ? "Hybrid" :
+                        fuelData?.includes("electric") ? "Electric" : undefined
+        
+        const transmissionData = data?.transmission?.toLocaleLowerCase()
+        const transmission: Transmission = transmissionData?.includes("manual") ? "Manual" :
+            transmissionData?.includes("automatic") ? "Automatic" :
+                transmissionData?.includes("semi") ? "SemiAutomatic" : undefined
+
+        const driveData = data?.driveType?.toLocaleLowerCase()
+        const driveType: DriveType = driveData?.includes("front") ? "FrontWheel" :
+            driveData?.includes("rear") ? "RearWheel" :
+                driveData?.includes("four") ? "FourWheel" : undefined
+                
 
         listings.push({ ...data, bodyType, fuelType, transmission, driveType, color,link })
         
