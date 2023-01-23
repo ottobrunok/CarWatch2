@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Listing } from '@prisma/client';
 import { Site } from '@prisma/client';
 import { useEffect, useState } from 'react';
+
 // Assume that you have an array of auction listings called `listings`
 
 const AuctionListings: NextPage<{ listings: (Listing & { site: Site })[] }> = ({ listings }) => {
@@ -26,11 +27,11 @@ const AuctionListings: NextPage<{ listings: (Listing & { site: Site })[] }> = ({
   return (
     <div className="container mx-auto px-4">
       <h1 className="font-bold text-gray-900 mb-6">Auction Listings</h1>
-      <div className=" grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+      <div className=" grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 ">
         {listings.map((listing) => (
-          <Link href={listing.link ?? listing.site.baseurl} key={listing.id} className="block bg-slate-200 rounded-lg shadow-lg overflow-hidden">
+          <Link href={listing.link ?? listing.site.baseurl} key={listing.id} className="block bg-slate-200 rounded-lg shadow-lg overflow-hidden duration-500 hover:scale-110 hover:bg-slate-200">
             <Image src={listing.imageLink ?? "/defaultcar.jpg"} alt={`${listing.brand} ${listing.model}`} width={400} height={400} className="imageSize object-cover aspect-square" />
-            <div className="px-6 py-4">
+            <div className="px-6 py-4 ">
               <div className="flex-col justify-between items-center mb-6 ">
                 <h2 className="text-2xl font-bold text-gray-900 ">{listing.brand} {listing.model}</h2>
                 {listing.price!= null && <p className="text-gray-900 font-semibold text-2xl">{listing.price}€</p>}

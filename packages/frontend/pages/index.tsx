@@ -2,40 +2,34 @@ import { Listing } from '@prisma/client'
 import axios from 'axios'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import AuctionListings from '../components/Listings'
 import { Site } from '@prisma/client'
 import Search from "../components/Search"
+import { FuelType, Transmission, BodyType, DriveType } from '@prisma/client'
+import { Hero } from '../components/Hero'
+import { Divider } from '../components/Divider'
+
+
+
 
 export default function Home() {
-  /*
-  const [price, setPrice] = useState("");
-  const [search, setSearch] = useState("");
-  const [listings, setListings] = useState([]);
-  
-  useEffect(() => {
-    const params = {};
-    if (search) {
-      params.search = search
-    }
-    if (price) {
-      params.price = price;
-    }
-    if(params={})
-    axios.get("/api/listings", {params}).then(res => setListings(res.data.listings));
-  }, [search, price]);
-*/
 
-
+  const ref = useRef<HTMLDivElement>(null);
+  console.log(ref.current?.offsetTop)
 
   const [listings, setListings] = useState<(Listing & { site: Site })[]>([])
   const [search, setSearch] = useState<string>("")
-  const [price, setPrice] = useState<number>()
+  const [price, setPrice] = useState<number | undefined>()
+  const [srcFuelType, setFuelType] = useState<FuelType | undefined>()
+  const [srcBodyType, setBodyType] = useState<BodyType | undefined>()
+  const [srcTransmission, setTransmission] = useState<Transmission | undefined>()
+  const [srcDriveType, setDriveType] = useState<DriveType | undefined>()
 
   useEffect(() => {
 
-    axios.get("/api/listings", { params: { price, search } }).then(l => setListings(l.data.listings))
-  }, [search, price])
+    axios.get("/api/listings", { params: { price, search, srcFuelType, srcBodyType, srcTransmission, srcDriveType } }).then(l => setListings(l.data.listings))
+  }, [search, price, srcFuelType, srcBodyType, srcTransmission, srcDriveType])
 
   //console.log(listings)
   return (
@@ -46,18 +40,30 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        MINU SUURN VEEBILEHT
-        brand/model
+      <div>
+        <Image
+          className='select-none pointer-events-none fixed h-full w-full object-cover'
+          src="/CW2.png"
+          alt="cw logo"
+          height={990}
+          width={2190}
+          draggable={false}
+          style={{}}
+        />
+        <div className='relative'>
+          <Hero divref={ref}></Hero>
+          <Divider></Divider>
 
-        <input type="text" value={search} onChange={e => setSearch(e.currentTarget.value)} />
-        price
-        <input type="number" value={price === undefined ? '' : price} onChange={e => setPrice(e.currentTarget.value ? Number(e.currentTarget.value) : undefined)} />
-        price
-        <div className='space-y-5'>
-          <AuctionListings listings={listings}></AuctionListings>
+          <main className="">
+            <div ref={ref} className="bg-white" id="search">
+              <Search setPrice={setPrice} setSearch={setSearch} setFuelType={setFuelType} setBodyType={setBodyType} setTransmission={setTransmission} setDriveType={setDriveType} />
+              <div className='space-y-5 '>
+                <AuctionListings listings={listings}></AuctionListings>
+              </div>
+            </div>
+          </main>
         </div>
-      </main>
+      </div>
     </>
   )
 }

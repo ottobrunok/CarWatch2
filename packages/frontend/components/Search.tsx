@@ -1,44 +1,118 @@
-import { NextPage } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Listing } from '@prisma/client';
-import { Site } from '@prisma/client';
-import { useEffect, useState } from 'react';
-// Assume that you have an array of auction listings called `listings`
+import React, { useState } from 'react';
+import { FuelType, Transmission, BodyType, DriveType } from '@prisma/client'
 
-const SearchBox: NextPage<{ listings: (Listing & { site: Site })[] }> = ({ listings }) => {
+interface Props {
+  setSearch: (search: string) => void;
+  setPrice: (price: number | undefined) => void;
+  setFuelType: (srcFuelType: FuelType| undefined) => void;
+  setBodyType: (srcBodyType: BodyType| undefined) => void;
+  setTransmission: (srcTransmission: Transmission| undefined) => void;
+  setDriveType: (srcDriveType: DriveType| undefined) => void;
+}
 
+const Search: React.FC<Props> = ({ setSearch, setPrice, setFuelType, setBodyType, setTransmission, setDriveType }) => {
 
   return (
-    <div className="container mx-auto px-4">
-      <h1 className="font-bold text-gray-900 mb-6">Auction Listings</h1>
-      <div className=" grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-        {listings.map((listing) => (
-          <Link href={listing.link ?? listing.site.baseurl} key={listing.id} className="block bg-slate-200 rounded-lg shadow-lg overflow-hidden">
-            <Image src={listing.imageLink ?? "/defaultcar.jpg"} alt={`${listing.brand} ${listing.model}`} width={400} height={400} className="imageSize object-cover aspect-square" />
-            <div className="px-6 py-4">
-              <div className="flex-col justify-between items-center mb-6 ">
-                <h2 className="text-2xl font-bold text-gray-900 ">{listing.brand} {listing.model}</h2>
-                {listing.price!= null && <p className="text-gray-900 font-semibold text-2xl">{listing.price}€</p>}
-                {listing.price == null && <p className="text-gray-900 font-semibold text-2xl">Not priced</p>}
-                <p className="text-stone-600 font-semibold text-xl">{listing.siteName}</p>
-              </div>
-              <div className=" grid gap-1 grid-cols-1 md:grid-cols-1 lg:grid-cols-1 whitespace-nowrap ">
-                {listing.year != null && <div className="inline-block"><p className="text-gray-700 text-base mb-2"> <strong className="">Year:</strong> {listing.year}</p></div>}
-                {typeof listing.engineL === 'number' && typeof listing.engineKW === 'number' && <div className="inline-block"><p className="text-gray-700 text-base mb-2 inline-block"><strong>Engine:</strong> {listing.engineL.toFixed(1) + "L " + listing.engineKW + "kW"}</p></div>}
-                {listing.fuelType != null && <p className="text-gray-700 text-base mb-2"><strong>Fuel:</strong> {listing.fuelType}</p>}
-                {listing.mileage != null && <div className="inline-block"><p className="text-gray-700 text-base mb-2"><strong>Mileage:</strong> {listing.mileage} km</p></div>}
-                {listing.bodyType != null && <p className="text-gray-700 text-base mb-2"><strong>Type:</strong> {listing.bodyType}</p>}
+    <div className="">
+      <table className="table-row-group w-auto text-center">
+        <thead>
+          <tr className="bg-gray-100 ">
+            <th className="px-4 py-2">Brand/Model</th>
+            <th className="px-4 py-2">Max Price</th>
+            <th className="px-4 py-2">Gearbox</th>
+            <th className="px-4 py-2">Fuel type</th>
+            <th className="px-4 py-2">Body type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="text-gray-700">
+            <td className=" px-4 py-2">
+              <input type="text" className="w-full border-2 border-gray-300 rounded-lg p-2 transition duration-500 hover:scale-125 hover:bg-slate-200 flex justify-center items-center" onChange={e => setSearch(e.currentTarget.value)} placeholder="Brand/Model" />
+            </td>
+            
+            <td className="px-4 py-2">
+              <input type="number" className="w-full border-2 border-gray-300 rounded-lg p-2 transition duration-500 hover:scale-125 hover:bg-slate-200 flex justify-center items-center" onChange={e => setPrice(e.currentTarget.value ? Number(e.currentTarget.value) : undefined)} placeholder="Price" />
+            </td>
 
-                {listing.transmission != null && <p className="text-gray-700 text-base mb-2"><strong>Gearbox:</strong> {listing.transmission}</p>}
-                {listing.driveType != null && <p className="text-gray-700 text-base mb-2"><strong>Drive:</strong> {listing.driveType}</p>}
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+            <td className="px-4 py-2">
+              <select className="w-full border-2 border-gray-300 rounded-lg p-2  transition duration-500 hover:scale-125 hover:bg-slate-200 flex justify-center items-center outline-none " onChange={e => {
+                switch (e.currentTarget.value) {
+                  case 'Manual':
+                    setTransmission(Transmission.Manual);
+                    break;
+                  case 'Automatic':
+                    setTransmission(Transmission.Automatic);
+                    break;
+                  case 'SemiAutomatic':
+                    setTransmission(Transmission.SemiAutomatic);
+                    break;
+                  case 'any':
+                    setTransmission(undefined);
+                    break;
+                }
+              }}>
+                <option className="text-gray-400" value="any" >All</option>
+                <option value="Manual" >Manual</option>
+                <option value="Automatic">Automatic</option>
+                <option value="SemiAutomatic">Semi-Automatic</option>
+              </select>
+            </td>
+
+            <td className="px-4 py-2">
+              <select className="w-full border-2 border-gray-300 rounded-lg p-2  transition duration-500 hover:scale-125 hover:bg-slate-200 flex justify-center items-center outline-none " onChange={e => {
+                switch (e.currentTarget.value) {
+                  case 'Petrol':
+                    setFuelType(FuelType.Petrol);
+                    break;
+                  case 'Diesel':
+                    setFuelType(FuelType.Diesel);
+                    break;
+                  case 'Hybrid':
+                    setFuelType(FuelType.Hybrid);
+                    break;
+                  case 'Electric':
+                    setFuelType(FuelType.Electric);
+                    break;
+                  case 'CNGLNG':
+                    setFuelType(FuelType.CNGLNG);
+                    break;
+                  case 'any':
+                    setFuelType(undefined);
+                    break;
+                }
+              }}>
+                <option className="text-gray-400" value="any" >All</option>
+                <option value="Petrol" >Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="Electric">Electric</option>
+                <option value="CNGLNG">CNG/LNG</option>
+              </select>
+            </td>
+
+            <td className="px-4 py-2">
+              <select className="w-full border-2 border-gray-300 rounded-lg p-2  transition duration-500 hover:scale-125 hover:bg-slate-200 flex justify-center items-center outline-none " onChange={e => {
+                setBodyType(BodyType[e.currentTarget.value as keyof typeof BodyType]);
+              }}>
+                <option className="text-gray-400" value="any" >All</option>
+                <option value="Sedan" >Sedan</option>
+                <option value="Hatchback">Hatchback</option>
+                <option value="StationWagon">Station Wagon</option>
+                <option value="Coupe">Coupe</option>
+                <option value="Touring">Touring</option>
+                <option value="AllTerrain">All-Terrain</option>
+                <option value="Minivan">Minivan</option>
+                <option value="Van">Van</option>
+                <option value="MPV">MPV</option>
+                <option value="Cabriolet">Cabriolet</option>
+                <option value="Pickup">Pickup</option>
+                <option value="Limousine">Limousine</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  );
-};
-
-export default SearchBox;
+  )
+}
+export default Search;
